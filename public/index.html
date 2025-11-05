@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Desesperanza</title>
+</head>
+<body class="bg-white text-black font-light">
+    <!-- Header -->
+    <header class="fixed w-full top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
+        <nav class="max-w-7xl mx-auto px-6 py-5">
+            <div class="flex justify-between items-center">
+                <a href="#inicio" class="text-base tracking-[0.3em] font-normal">DESESPERANZA</a>
+                
+                <!-- Menú móvil - Botones principales -->
+                <div class="flex items-center gap-6 sm:hidden">
+                    <button id="carritoBtn" class="relative hover:opacity-50 transition">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span id="carrito-count" class="absolute -top-1 -right-1 bg-black text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center hidden"></span>
+                    </button>
+                    <button id="mobile-menu-btn" class="hover:opacity-50 transition">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Menú desktop -->
+                <ul class="hidden sm:flex gap-10 list-none items-center text-xs tracking-wider">
+                    <li><a class="hover:opacity-50 transition" href="#inicio">INICIO</a></li>
+                    <li><a class="hover:opacity-50 transition" href="#productos">PRODUCTOS</a></li>
+                    <li><a class="hover:opacity-50 transition" href="#nosotros">NOSOTROS</a></li>
+                    <li><a class="hover:opacity-50 transition" href="#contacto">CONTACTO</a></li>
+                    <li id="mis-pedidos-link" class="hidden">
+                        <a class="hover:opacity-50 transition" href="#mis-pedidos">PEDIDOS</a>
+                    </li>
+                    <li>
+                        <button id="carritoBtn" class="relative hover:opacity-50 transition">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            </svg>
+                            <span id="carrito-count" class="absolute -top-1 -right-1 bg-black text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center hidden"></span>
+                        </button>
+                    </li>
+                    <li id="sesion-container">
+                        <a class="hover:opacity-50 transition" href="#loginForm">INGRESAR</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Menú móvil desplegable -->
+            <div id="mobile-menu" class="hidden sm:hidden mt-6 pt-6 border-t border-gray-100">
+                <ul class="flex flex-col gap-4 list-none text-xs tracking-wider">
+                    <li><a class="block hover:opacity-50 transition py-2" href="#inicio">INICIO</a></li>
+                    <li><a class="block hover:opacity-50 transition py-2" href="#productos">PRODUCTOS</a></li>
+                    <li><a class="block hover:opacity-50 transition py-2" href="#nosotros">NOSOTROS</a></li>
+                    <li><a class="block hover:opacity-50 transition py-2" href="#contacto">CONTACTO</a></li>
+                    <li id="mis-pedidos-link-mobile" class="hidden">
+                        <a class="block hover:opacity-50 transition py-2" href="#mis-pedidos">PEDIDOS</a>
+                    </li>
+                    <li id="sesion-container-mobile">
+                        <a class="block hover:opacity-50 transition py-2" href="#loginForm">INGRESAR</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Panel lateral del carrito - Rediseñado -->
+    <div id="carrito-panel" class="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white border-l border-gray-100 transform translate-x-full transition-transform duration-300 z-50 flex flex-col">
+        <div class="p-8 border-b border-gray-100 flex justify-between items-start">
+            <div>
+                <p class="text-xs uppercase tracking-wider opacity-40 mb-1">Compra</p>
+                <h2 class="text-2xl">Carrito</h2>
+            </div>
+            <button id="cerrar-carrito" class="text-2xl opacity-40 hover:opacity-100">&times;</button>
+        </div>
+        
+        <div id="carrito-items" class="flex-1 overflow-y-auto p-8 space-y-6">
+            <!-- Los items del carrito se mostrarán aquí -->
+        </div>
+        
+        <div class="p-8 border-t border-gray-100">
+            <div class="mb-8">
+                <div class="flex justify-between text-xs uppercase tracking-wider opacity-40 mb-4">
+                    <span>Productos</span>
+                    <span id="total-productos">0</span>
+                </div>
+                <div class="flex justify-between text-2xl mb-8">
+                    <span>Total</span>
+                    <span id="total-precio">$0.00</span>
+                </div>
+            </div>
+            <button id="guardar-carrito" class="w-full px-6 py-4 bg-black text-white hover:opacity-80 transition mb-3 text-sm">
+                Finalizar compra
+            </button>
+            <button id="vaciar-carrito" class="w-full px-6 py-4 border border-gray-200 hover:bg-gray-50 transition text-sm">
+                Vaciar carrito
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay para cerrar el panel (fondo semi-transparente gris) -->
+    <div id="carrito-overlay" class="fixed inset-0 bg-black/40 z-40 hidden transition-opacity duration-300"></div>
+
+    <!-- Modal de Registro - Rediseñado -->
+    <div id="registro-modal" class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full p-12">
+            <div class="flex justify-between items-start mb-8">
+                <div>
+                    <p class="text-xs uppercase tracking-wider opacity-40 mb-2">Registro</p>
+                    <h3 class="text-2xl">Nueva cuenta</h3>
+                </div>
+                <button id="cerrar-registro" class="text-2xl opacity-40 hover:opacity-100">&times;</button>
+            </div>
+            
+            <div id="mensaje-registro" class="mb-6 p-3 hidden"></div>
+
+            <form id="registroForm" class="space-y-6">
+                <div>
+                    <label for="reg-username" class="block text-xs uppercase tracking-wider opacity-40 mb-2">Usuario</label>
+                    <input 
+                        id="reg-username" 
+                        type="text" 
+                        name="username" 
+                        required
+                        minlength="3"
+                        placeholder="Nombre de usuario"
+                        class="w-full px-0 py-3 border-0 border-b border-gray-200 focus:outline-none focus:border-black transition bg-transparent">
+                </div>
+                
+                <div>
+                    <label for="reg-password" class="block text-xs uppercase tracking-wider opacity-40 mb-2">Contraseña</label>
+                    <input 
+                        id="reg-password" 
+                        type="password" 
+                        name="password" 
+                        required
+                        minlength="6"
+                        placeholder="Mínimo 6 caracteres"
+                        class="w-full px-0 py-3 border-0 border-b border-gray-200 focus:outline-none focus:border-black transition bg-transparent">
+                </div>
+
+                <div>
+                    <label for="reg-password-confirm" class="block text-xs uppercase tracking-wider opacity-40 mb-2">Confirmar</label>
+                    <input 
+                        id="reg-password-confirm" 
+                        type="password" 
+                        name="password-confirm" 
+                        required
+                        minlength="6"
+                        placeholder="Repite tu contraseña"
+                        class="w-full px-0 py-3 border-0 border-b border-gray-200 focus:outline-none focus:border-black transition bg-transparent">
+                </div>
+                
+                <div class="pt-6">
+                    <button 
+                        id="registroButton" 
+                        type="submit"
+                        class="w-full px-8 py-4 bg-black text-white hover:opacity-80 transition text-sm tracking-wide">
+                        CREAR CUENTA
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="min-h-screen flex items-center justify-center pt-24">
+        <div class="px-6 max-w-5xl w-full">
+            <div class="text-center">
+                <p class="text-xs uppercase tracking-[0.3em] opacity-30 mb-6">Establecidos en 1975</p>
+                <h1 class="text-7xl sm:text-8xl lg:text-9xl mb-8 tracking-tighter leading-[0.9]">Despertar<br>con Pan</h1>
+                <p class="text-xl mb-16 opacity-60 max-w-2xl mx-auto">Cada hogaza cuenta una historia. Cada bocado, una tradición que perdura desde hace medio siglo.</p>
+                <div class="flex gap-4 justify-center">
+                    <a href="#productos" class="px-8 py-4 bg-black text-white hover:opacity-80 transition text-xs tracking-wider">DESCUBRIR</a>
+                    <a href="#contacto" class="px-8 py-4 border border-gray-200 hover:bg-gray-50 transition text-xs tracking-wider">VISÍTANOS</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Productos Section -->
+    <section id="productos" class="min-h-screen py-32 border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-24">
+                <p class="text-xs uppercase tracking-[0.3em] opacity-30 mb-4">Selección diaria</p>
+                <h2 class="text-5xl sm:text-7xl tracking-tighter">Nuestro Catálogo</h2>
+            </div>
+            
+            <div id="productos-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Los productos se cargarán dinámicamente aquí -->
+            </div>
+        </div>
+    </section>
+
+    <!-- MIS PEDIDOS Section -->
+    <section id="mis-pedidos" class="min-h-screen py-32 border-t border-gray-100 hidden">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="mb-24">
+                <p class="text-xs uppercase tracking-[0.3em] opacity-30 mb-4">Tu historia</p>
+                <h2 class="text-5xl sm:text-7xl tracking-tighter">Pedidos Anteriores</h2>
+            </div>
+            
+            <div id="pedidos-container"></div>
+        </div>
+    </section>
+
+    <!-- Contacto Section -->
+    <section id="contacto" class="min-h-screen py-32 border-t border-gray-100">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-20">
+                <!-- Login movido a la izquierda -->
+                <div>
+                    <div class="mb-16">
+                        <p class="text-xs uppercase tracking-[0.3em] opacity-30 mb-4">Tu espacio</p>
+                        <h2 class="text-5xl sm:text-7xl tracking-tighter">Iniciar Sesión</h2>
+                    </div>
+                    
+                    <div id="login-container">
+                        <div id="mensaje" class="mb-4 p-3 hidden"></div>
+            
+                        <form id="loginForm" class="space-y-6">
+                            <div>
+                                <label for="username" class="block text-xs uppercase tracking-wider opacity-40 mb-3">USUARIO</label>
+                                <input 
+                                    id="username" 
+                                    type="text" 
+                                    name="username" 
+                                    autocomplete="username" 
+                                    required
+                                    class="w-full px-0 py-3 border-0 border-b border-gray-200 focus:outline-none focus:border-black transition bg-transparent text-lg">
+                            </div>
+                            
+                            <div>
+                                <label for="password" class="block text-xs uppercase tracking-wider opacity-40 mb-3">CONTRASEÑA</label>
+                                <input 
+                                    id="password" 
+                                    type="password" 
+                                    name="password" 
+                                    autocomplete="current-password" 
+                                    required
+                                    class="w-full px-0 py-3 border-0 border-b border-gray-200 focus:outline-none focus:border-black transition bg-transparent text-lg">
+                            </div>
+                            
+                            <div class="pt-8">
+                                <button 
+                                    id="loginButton" 
+                                    type="submit"
+                                    class="w-full px-8 py-4 bg-black text-white hover:opacity-80 transition text-xs tracking-wider">
+                                    INICIAR SESIÓN
+                                </button>
+                            </div>
+
+                            <div class="text-center pt-6">
+                                <button 
+                                    id="mostrar-registro"
+                                    type="button"
+                                    class="text-xs tracking-wider underline opacity-40 hover:opacity-100 transition">
+                                    CREAR CUENTA
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Información movida a la derecha -->
+                <div>
+                    <div class="mb-16">
+                        <p class="text-xs uppercase tracking-[0.3em] opacity-30 mb-4">Encuéntranos</p>
+                        <h2 class="text-5xl sm:text-7xl tracking-tighter">Nuestra Casa</h2>
+                    </div>
+                    
+                    <div class="space-y-12">
+                        <div>
+                            <p class="text-xs uppercase tracking-wider opacity-40 mb-3">UBICACIÓN</p>
+                            <p class="text-lg opacity-60 leading-relaxed">Av. 4 53, Valentin Gómez Farías<br>Venustiano Carranza, CDMX<br>CP 15010</p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase tracking-wider opacity-40 mb-3">HORARIOS DE APERTURA</p>
+                            <p class="text-lg opacity-60 leading-relaxed">Lunes a Sábado: 7:00 AM - 8:00 PM<br>Domingo: 8:00 AM - 3:00 PM</p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase tracking-wider opacity-40 mb-3">CONVERSEMOS</p>
+                            <p class="text-lg opacity-60 leading-relaxed">Tel: (55) 1234-5678<br>info@desesperanza.mx</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nosotros Section - Movido después de contacto -->
+    <section id="nosotros" class="py-32 border-t border-gray-100">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="mb-20">
+                <p class="text-xs uppercase tracking-[0.3em] opacity-30 mb-4">Nuestra esencia</p>
+                <h2 class="text-5xl sm:text-7xl tracking-tighter">Medio Siglo de Tradición</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-20">
+                <div>
+                    <p class="text-xl leading-relaxed opacity-60">
+                        Desde 1975, transformamos harina en memorias. Cada amanecer trae consigo el aroma del pan recién horneado, elaborado con técnicas que han pasado de generación en generación.
+                    </p>
+                </div>
+                <div>
+                    <p class="text-xl leading-relaxed opacity-60">
+                        No hacemos pan, creamos momentos. Ingredientes nobles, manos expertas y pasión genuina se funden en cada pieza que sale de nuestro horno.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 border-t border-gray-100">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex justify-between items-center">
+                <p class="text-xs opacity-40">&copy; 2025 Desesperanza</p>
+                <p class="text-xs opacity-40">Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/scripts/index.js"></script>
+</body>
+</html>
