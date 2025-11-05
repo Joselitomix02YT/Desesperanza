@@ -29,7 +29,7 @@ console.log('   PASSWORD exists:', !!(process.env.MYSQL_PASSWORD || process.env.
 
 // Obtener puerto y convertir a número
 const portFromEnv = process.env.MYSQL_PORT || process.env.MYSQLPORT;
-const mysqlPort = portFromEnv ? parseInt(portFromEnv, 10) : 44431;
+const mysqlPort = portFromEnv ? parseInt(portFromEnv, 10) : 41809;
 
 console.log('🔧 Puerto detectado:', portFromEnv, '→ convertido a:', mysqlPort);
 
@@ -64,7 +64,7 @@ pool.getConnection()
   .catch(err => {
     console.error('❌ Error al conectar a MySQL:', err.message)
     console.error('   Host intentado:', process.env.MYSQL_HOST || process.env.MYSQLHOST)
-    console.error('   Port intentado:', process.env.MYSQL_PORT || process.env.MYSQLPORT || 44431)
+    console.error('   Port intentado:', process.env.MYSQL_PORT || process.env.MYSQLPORT || 41809)
   })
 
 const sessionStore = new MySQLStore({}, pool)
