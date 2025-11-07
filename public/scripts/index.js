@@ -357,7 +357,7 @@ function agregarAlCarrito(id, nombre, precio, imagen_url, cantidadDisponible) {
 // Función para actualizar el carrito visual
 function actualizarCarrito() {
     const carritoItems = document.getElementById('carrito-items');
-    const carritoCount = document.getElementById('carrito-count');
+    const carritoCounts = document.querySelectorAll('.carrito-count');
     const totalProductos = document.getElementById('total-productos');
     const totalPrecio = document.getElementById('total-precio');
     
@@ -365,13 +365,15 @@ function actualizarCarrito() {
     const cantidadTotal = carrito.reduce((sum, item) => sum + item.cantidad, 0);
     const precioTotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     
-    // Actualizar badge del carrito
-    if (cantidadTotal > 0) {
-        carritoCount.textContent = cantidadTotal;
-        carritoCount.classList.remove('hidden');
-    } else {
-        carritoCount.classList.add('hidden');
-    }
+    // Actualizar badge del carrito (ambos: mobile y desktop)
+    carritoCounts.forEach(carritoCount => {
+        if (cantidadTotal > 0) {
+            carritoCount.textContent = cantidadTotal;
+            carritoCount.classList.remove('hidden');
+        } else {
+            carritoCount.classList.add('hidden');
+        }
+    });
     
     // Actualizar totales
     totalProductos.textContent = cantidadTotal;
@@ -505,9 +507,11 @@ function mostrarNotificacion(mensaje) {
 }
 
 // Abrir/Cerrar panel del carrito
-document.getElementById('carritoBtn').addEventListener('click', function() {
-    document.getElementById('carrito-panel').classList.remove('translate-x-full');
-    document.getElementById('carrito-overlay').classList.remove('hidden');
+document.querySelectorAll('.carritoBtn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.getElementById('carrito-panel').classList.remove('translate-x-full');
+        document.getElementById('carrito-overlay').classList.remove('hidden');
+    });
 });
 
 function cerrarCarritoPanel() {
