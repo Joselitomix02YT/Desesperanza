@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
     <title>Desesperanza</title>
 </head>
 <body class="bg-white text-black font-light">
@@ -279,7 +280,11 @@
                     <div class="space-y-12">
                         <div>
                             <p class="text-xs uppercase tracking-wider opacity-40 mb-3">UBICACIÓN</p>
-                            <p class="text-lg opacity-60 leading-relaxed">Av. 4 53, Valentin Gómez Farías<br>Venustiano Carranza, CDMX<br>CP 15010</p>
+                            <p class="text-lg opacity-60 leading-relaxed">Esquina Paseo Nuevo, Vicente Guerrero<br> Ojo de Agua<br> 13450 Ciudad de México<br> CDMX</p>
+
+                            <div id="map" class="flex flex-col w-100 h-100 m-9 z-0 border-black border-2"></div>
+                            <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+                            <script src="scripts/m.js"></script>
                         </div>
                         <div>
                             <p class="text-xs uppercase tracking-wider opacity-40 mb-3">HORARIOS DE APERTURA</p>
@@ -289,6 +294,8 @@
                             <p class="text-xs uppercase tracking-wider opacity-40 mb-3">CONVERSEMOS</p>
                             <p class="text-lg opacity-60 leading-relaxed">Tel: (55) 1234-5678<br>info@desesperanza.mx</p>
                         </div>
+
+                        
                     </div>
                 </div>
             </div>
