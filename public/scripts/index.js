@@ -131,8 +131,61 @@ async function cargarMisPedidos() {
                         </div>
                     `).join('')}
                 </div>
+                <div class="mt-4 flex justify-end">
+                    <button class="ticket-btn px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors" 
+                            data-pedido-index="${index}"
+                            data-pedido-numero="${pedidosArray.length - index}"
+                            data-fecha="${grupo.fecha}"
+                            data-total="${grupo.total.toFixed(2)}"
+                            data-items='${JSON.stringify(grupo.items)}'
+                            title="Mostrar ticket">
+                        Mostrar Ticket 🧾
+                    </button>
+                    <button onclick="imprimirTicket(${index})" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                            Imprimir 🖨️
+                        </button>
+                </div>
+                
+                <div id="area-ticket-${index}" class="area-ticket hidden mt-4 border border-stone-300 p-5 bg-white font-mono text-sm">
+                </div>
             </div>
         `).join('');
+
+        // Agregar event listeners a los botones de ticket
+        document.querySelectorAll('.ticket-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const pedidoIndex = btn.dataset.pedidoIndex;
+                const pedidoNumero = btn.dataset.pedidoNumero;
+                const fecha = btn.dataset.fecha;
+                const total = btn.dataset.total;
+                const items = JSON.parse(btn.dataset.items);
+                
+                const areaTicket = document.getElementById(`area-ticket-${pedidoIndex}`);
+                
+                // Generar la lista de artículos
+                let itemsHTML = items.map(item => 
+                    `<li>${item.nombre} - ${item.cantidad} x $${parseFloat(item.precio).toFixed(2)} = $${(parseFloat(item.precio) * parseInt(item.cantidad)).toFixed(2)}</li>`
+                ).join('');
+
+                let contenidoHTML = `
+                    <h3 style="text-align: center;">--- Recibo de Compra ---</h3>
+                    <p>Pedido #${pedidoNumero}</p>
+                    <p>Fecha: ${fecha}</p>
+                    <p>Cliente: ${usuarioActual || 'Usuario'}</p>
+                    <p>-------------------------</p>
+                    <h4>Artículos:</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        ${itemsHTML}
+                    </ul>
+                    <p>-------------------------</p>
+                    <h4>Total: $${total}</h4>
+                    <p style="text-align: center;">--- ¡Gracias por su compra! ---</p>
+                `;
+
+                areaTicket.innerHTML = contenidoHTML;
+                areaTicket.classList.remove('hidden');
+            });
+        });
         
     } catch (error) {
         console.error('Error al cargar pedidos:', error);
@@ -143,6 +196,44 @@ async function cargarMisPedidos() {
         `;
     }
 }
+
+function generarDatosDelTicket(i, i_n,i_p,i_c, i_u) {
+    // Simulación de datos de compra
+    const datosDeCompra = {
+        idTransaccion: i,
+        fecha: new Date().toLocaleString(),
+        cliente: i_u,
+        articulos: [
+            { nombre: i_n, cantidad: i_c, precio: i_p },
+            { nombre: i_n, cantidad: i_c, precio: i_p }
+        ],
+    };
+    console.log('Datos del ticket generados:', datosDeCompra);
+    return datosDeCompra;
+}
+
+function imprimirTicket(pedidoIndex) {
+    const elementosAImprimir = document.getElementById(`area-ticket-${pedidoIndex}`);
+    
+    if (!elementosAImprimir) {
+        console.error('No se encontró el ticket para imprimir');
+        return;
+    }
+    
+    const contenidoOriginal = document.body.innerHTML;
+
+    document.body.innerHTML = elementosAImprimir.innerHTML;
+
+    // Abre el diálogo de impresión del navegador
+    window.print();
+
+    document.body.innerHTML = contenidoOriginal;
+    
+    // Recargar para restaurar los event listeners
+    location.reload();
+}
+
+
 
 // Actualizar UI cuando hay sesión activa
 function actualizarUIConSesion(username, isAdmin) {
@@ -473,7 +564,7 @@ document.getElementById('guardar-carrito').addEventListener('click', async funct
         const data = await response.json();
 
         if (response.ok) {
-            alert(`${data.mensaje}\n\nGracias por tu pedido, ${usuarioActual}!`);
+            alert(`${data.mensaje}\n\nTotal gastado: $${data.totalGastado}\nFondos restantes: $${data.fondosRestantes}\n\n¡Gracias por tu pedido, ${usuarioActual}!`);
             carrito = [];
             actualizarCarrito();
             cerrarCarritoPanel();
@@ -482,10 +573,17 @@ document.getElementById('guardar-carrito').addEventListener('click', async funct
             // Recargar pedidos del usuario
             await cargarMisPedidos();
             
-            // Scroll a "Mis Pedidos"
-            document.getElementById('mis-pedidos')?.scrollIntoView({ behavior: 'smooth' });
+            // Recargar página para actualizar fondos
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
         } else {
-            alert(data.error || 'Error al guardar el pedido');
+            // Mostrar mensaje de error específico
+            if (data.error === 'Fondos insuficientes') {
+                alert(`❌ ${data.mensaje}\n\nTe faltan: $${data.faltante}\n\nPor favor, agrega fondos a tu cuenta antes de continuar.`);
+            } else {
+                alert(data.error || 'Error al guardar el pedido');
+            }
         }
 
     } catch (error) {
@@ -646,3 +744,7 @@ document.getElementById('loginForm')?.addEventListener('submit', function(event)
         loginButton.classList.remove('opacity-50', 'cursor-not-allowed');
     });
 });
+
+window.agregarAlCarrito = agregarAlCarrito;
+window.eliminarDelCarrito = eliminarDelCarrito;
+window.AgregarFondos = AgregarFondos;
