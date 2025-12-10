@@ -171,6 +171,39 @@
         </div>
     </div>
 
+    <div id="fondos-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-light">Agregar Fondos</h3>
+                <button id="cerrar-fondos" class="text-stone-600 hover:text-stone-900 text-2xl">&times;</button>
+            </div>
+            
+            <div id="mensaje-fondos" class="mb-4 p-3 rounded-lg hidden"></div>
+
+            <form id="fondosForm" class="space-y-4">
+                <div>
+                    <label for="cantidad-fondos" class="block text-sm font-light mb-2 text-stone-700">Cantidad (MXN)</label>
+                    <input 
+                        id="cantidad-fondos" 
+                        type="number" 
+                        name="cantidad" 
+                        required
+                        min="1"
+                        step="0.01"
+                        placeholder="Ingresa la cantidad"
+                        class="w-full px-4 py-3 border border-stone-300 rounded-lg focus:outline-none focus:border-stone-600 transition-colors">
+                </div>
+                
+                <button 
+                    id="fondosButton" 
+                    type="submit"
+                    class="w-full px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-light">
+                    Agregar Fondos
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section id="inicio" class="min-h-screen flex items-center justify-center pt-24">
         <div class="px-6 max-w-5xl w-full">
