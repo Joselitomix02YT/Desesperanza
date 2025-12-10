@@ -60,11 +60,11 @@ async function cargarMisPedidos() {
         
         if (pedidos.length === 0) {
             container.innerHTML = `
-                <div class="text-center py-12">
-                    <p class="text-2xl text-stone-600 mb-4">📦</p>
-                    <p class="text-lg text-stone-600">Aún no has realizado ningún pedido</p>
-                    <a href="#productos" class="inline-block mt-6 px-6 py-3 bg-stone-800 text-white rounded-lg hover:bg-stone-700 transition-colors">
-                        Ver Productos
+                <div class="text-center py-20">
+                    <p class="text-xs uppercase tracking-[0.3em] opacity-30 mb-4">Sin pedidos</p>
+                    <p class="text-2xl tracking-tight opacity-60 mb-12">Aún no has realizado ningún pedido</p>
+                    <a href="#productos" class="inline-block px-8 py-4 bg-black text-white hover:opacity-80 transition text-xs tracking-wider">
+                        VER PRODUCTOS
                     </a>
                 </div>
             `;
@@ -105,48 +105,50 @@ async function cargarMisPedidos() {
         
         // Mostrar pedidos agrupados
         container.innerHTML = pedidosArray.map((grupo, index) => `
-            <div class="bg-white border border-gray-100 p-6 mb-6">
-                <div class="flex justify-between items-center mb-4 pb-4 border-b border-gray-100">
+            <div class="border border-gray-100 p-8 mb-8">
+                <div class="flex justify-between items-start mb-8 pb-6 border-b border-gray-100">
                     <div>
-                        <h3 class="text-lg">Pedido #${pedidosArray.length - index}</h3>
-                        <p class="text-xs opacity-60">${grupo.fecha}</p>
+                        <p class="text-xs uppercase tracking-wider opacity-40 mb-2">PEDIDO</p>
+                        <h3 class="text-3xl tracking-tight mb-2">#${pedidosArray.length - index}</h3>
+                        <p class="text-xs opacity-60 tracking-wide">${grupo.fecha}</p>
                     </div>
                     <div class="text-right">
-                        <p class="text-xs opacity-60 mb-1">Total</p>
-                        <p class="text-2xl">$${grupo.total.toFixed(2)}</p>
+                        <p class="text-xs uppercase tracking-wider opacity-40 mb-2">TOTAL</p>
+                        <p class="text-4xl tracking-tight">$${grupo.total.toFixed(2)}</p>
                     </div>
                 </div>
                 
-                <div class="space-y-3">
+                <div class="space-y-4 mb-8">
                     ${grupo.items.map(item => `
-                        <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                        <div class="flex justify-between items-center py-3 border-b border-gray-50">
                             <div class="flex-1">
-                                <p class="text-sm">${item.nombre}</p>
-                                <p class="text-xs opacity-60">Cantidad: ${item.cantidad}</p>
+                                <p class="text-sm tracking-wide mb-1">${item.nombre}</p>
+                                <p class="text-xs opacity-40 uppercase tracking-wider">Cantidad: ${item.cantidad}</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-sm">$${parseFloat(item.precio).toFixed(2)} c/u</p>
+                                <p class="text-sm tracking-wide">$${parseFloat(item.precio).toFixed(2)} c/u</p>
                                 <p class="text-xs opacity-60">$${(parseFloat(item.precio) * parseInt(item.cantidad)).toFixed(2)}</p>
                             </div>
                         </div>
                     `).join('')}
                 </div>
-                <div class="mt-4 flex justify-end">
-                    <button class="ticket-btn px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors" 
+                
+                <div class="flex gap-3 justify-end pt-4 border-t border-gray-100">
+                    <button class="ticket-btn px-6 py-3 border border-gray-200 hover:bg-gray-50 transition text-xs tracking-wider" 
                             data-pedido-index="${index}"
                             data-pedido-numero="${pedidosArray.length - index}"
                             data-fecha="${grupo.fecha}"
                             data-total="${grupo.total.toFixed(2)}"
                             data-items='${JSON.stringify(grupo.items)}'
                             title="Mostrar ticket">
-                        Mostrar Ticket 🧾
+                        MOSTRAR TICKET
                     </button>
-                    <button onclick="imprimirTicket(${index})" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                            Imprimir 🖨️
-                        </button>
+                    <button onclick="imprimirTicket(${index})" class="px-6 py-3 bg-black text-white hover:opacity-80 transition text-xs tracking-wider">
+                        IMPRIMIR
+                    </button>
                 </div>
                 
-                <div id="area-ticket-${index}" class="area-ticket hidden mt-4 border border-stone-300 p-5 bg-white font-mono text-sm">
+                <div id="area-ticket-${index}" class="area-ticket hidden mt-6 border border-gray-200 p-8 bg-gray-50 font-mono text-xs leading-relaxed">
                 </div>
             </div>
         `).join('');
@@ -190,8 +192,9 @@ async function cargarMisPedidos() {
     } catch (error) {
         console.error('Error al cargar pedidos:', error);
         document.getElementById('pedidos-container').innerHTML = `
-            <div class="text-center py-12">
-                <p class="text-red-600">Error al cargar tus pedidos. Intenta recargar la página.</p>
+            <div class="text-center py-20">
+                <p class="text-xs uppercase tracking-wider opacity-40 mb-4">ERROR</p>
+                <p class="text-lg opacity-60">No se pudieron cargar tus pedidos. Intenta recargar la página.</p>
             </div>
         `;
     }
