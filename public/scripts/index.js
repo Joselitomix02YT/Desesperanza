@@ -624,10 +624,10 @@ function actualizarCarrito() {
     } else {
         carritoItems.innerHTML = carrito.map(item => `
             <div class="flex items-center gap-4 border-b border-gray-100 pb-4">
-                <img src="${item.imagen_url || 'https://via.placeholder.com/80'}" 
+                <img src="${item.imagen_url || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80"%3E%3Crect width="80" height="80" fill="%23f5f5f5"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="10" fill="%23999"%3ESin imagen%3C/text%3E%3C/svg%3E'}" 
                      alt="${item.nombre}" 
-                     class="w-12 h-12 object-cover"
-                     onerror="this.src='https://via.placeholder.com/80'">
+                     class="w-20 h-20 object-cover" 
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"80\" height=\"80\"%3E%3Crect width=\"80\" height=\"80\" fill=\"%23f5f5f5\"/%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"10\" fill=\"%23999\"%3ESin imagen%3C/text%3E%3C/svg%3E'">
                 <div class="flex-1">
                     <h4 class="text-sm mb-1">${item.nombre}</h4>
                     <p class="text-xs opacity-60">$${item.precio.toFixed(2)} x ${item.cantidad}</p>
@@ -793,10 +793,10 @@ async function cargarProductos() {
             
             article.innerHTML = `
                 <div class="aspect-square overflow-hidden bg-gray-50 relative mb-4">
-                    <img src="${producto.imagen_url || 'https://via.placeholder.com/400?text=Sin+Imagen'}" 
+                    <img src="${producto.imagen_url || 'data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"400\"%3E%3Crect width=\"400\" height=\"400\" fill=\"%23f5f5f5\"/%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"14\" fill=\"%23999\"%3ESIN IMAGEN%3C/text%3E%3C/svg%3E'}" 
                          alt="${producto.nombre}" 
                          class="w-full h-full object-cover group-hover:opacity-80 transition ${agotado ? 'opacity-30' : ''}"
-                         onerror="this.src='https://via.placeholder.com/400?text=Sin+Imagen'">
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"400\"%3E%3Crect width=\"400\" height=\"400\" fill=\"%23f5f5f5\"/%3E%3Ctext x=\"50%25\" y=\"50%25\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"14\" fill=\"%23999\"%3ESIN IMAGEN%3C/text%3E%3C/svg%3E'">
                     ${agotado ? '<div class="absolute inset-0 flex items-center justify-center"><span class="text-black text-sm">AGOTADO</span></div>' : ''}
                 </div>
                 <div>
@@ -923,6 +923,11 @@ async function AgregarFondos() {
     
     if (isNaN(cantidadNumerica) || cantidadNumerica <= 0) {
         alert('Por favor ingresa una cantidad válida mayor a 0');
+        return;
+    }
+    
+    if (cantidadNumerica > 999999999999) {
+        alert('La cantidad máxima permitida es $999,999,999,999 MXN');
         return;
     }
     

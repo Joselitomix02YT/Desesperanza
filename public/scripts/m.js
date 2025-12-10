@@ -12,9 +12,9 @@ map.locate({enableHighAccuracy:true});
 map.on('locationfound', e => {
     const coords = [e.latlng.lat, e.latlng.lng];
     const marker = L.marker(coords);
-    marker.bindPopup('Te encuentrass aquí');
+    marker.bindPopup('Te encuentras aquí');
     map.addLayer(marker);
-    socket.emit('userCoordinates', coords);
+    // socket.emit('userCoordinates', coords); // Comentado: Socket.IO no está configurado
 });
 
 var marcador = L.marker([19.293928, -99.015089]).addTo(map);
@@ -22,10 +22,9 @@ marcador.bindPopup('Desesperanza A.C.').openPopup();
 
 
 
-socket.on('userNewCoordinates',(coords)=>{
-	console.log('nuevo usuario conectado');
-	const marker=L.marker([52,-0.9]);
-	marker.bindPopup('Hola');
-	map.addLayer(marker);
-	//map.addLayeuserNewCoordinates(marker);
-});
+// socket.on('userNewCoordinates',(coords)=>{
+// 	console.log('nuevo usuario conectado');
+// 	const marker=L.marker([52,-0.9]);
+// 	marker.bindPopup('Hola');
+// 	map.addLayer(marker);
+// });
