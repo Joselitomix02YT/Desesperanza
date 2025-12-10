@@ -164,24 +164,62 @@ async function cargarMisPedidos() {
                 
                 const areaTicket = document.getElementById(`area-ticket-${pedidoIndex}`);
                 
-                // Generar la lista de artículos
-                let itemsHTML = items.map(item => 
-                    `<li>${item.nombre} - ${item.cantidad} x $${parseFloat(item.precio).toFixed(2)} = $${(parseFloat(item.precio) * parseInt(item.cantidad)).toFixed(2)}</li>`
-                ).join('');
+                // Generar la lista de artículos con estilo minimalista
+                let itemsHTML = items.map(item => {
+                    const subtotal = (parseFloat(item.precio) * parseInt(item.cantidad)).toFixed(2);
+                    return `
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 500; margin-bottom: 4px;">${item.nombre}</div>
+                                <div style="font-size: 11px; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    ${item.cantidad} × $${parseFloat(item.precio).toFixed(2)}
+                                </div>
+                            </div>
+                            <div style="text-align: right; font-weight: 500;">
+                                $${subtotal}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
 
                 let contenidoHTML = `
-                    <h3 style="text-align: center;">--- Recibo de Compra ---</h3>
-                    <p>Pedido #${pedidoNumero}</p>
-                    <p>Fecha: ${fecha}</p>
-                    <p>Cliente: ${usuarioActual || 'Usuario'}</p>
-                    <p>-------------------------</p>
-                    <h4>Artículos:</h4>
-                    <ul style="list-style: none; padding: 0;">
-                        ${itemsHTML}
-                    </ul>
-                    <p>-------------------------</p>
-                    <h4>Total: $${total}</h4>
-                    <p style="text-align: center;">--- ¡Gracias por su compra! ---</p>
+                    <div style="max-width: 400px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+                        <div style="text-align: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px solid #000;">
+                            <div style="font-size: 24px; font-weight: 300; letter-spacing: 0.3em; margin-bottom: 8px;">DESESPERANZA</div>
+                            <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; opacity: 0.6;">Panadería Artesanal</div>
+                        </div>
+                        
+                        <div style="margin-bottom: 24px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.6;">Pedido</span>
+                                <span style="font-weight: 500;">#${pedidoNumero}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.6;">Fecha</span>
+                                <span style="font-size: 13px;">${fecha}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.6;">Cliente</span>
+                                <span style="font-size: 13px;">${usuarioActual || 'Usuario'}</span>
+                            </div>
+                        </div>
+                        
+                        <div style="margin: 32px 0; padding-top: 24px; border-top: 1px solid #e0e0e0;">
+                            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.4; margin-bottom: 16px;">Artículos</div>
+                            ${itemsHTML}
+                        </div>
+                        
+                        <div style="margin-top: 32px; padding-top: 24px; border-top: 2px solid #000;">
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.6;">Total</span>
+                                <span style="font-size: 32px; font-weight: 300; letter-spacing: -0.02em;">$${total}</span>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid #e0e0e0;">
+                            <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; opacity: 0.4;">Gracias por su compra</div>
+                        </div>
+                    </div>
                 `;
 
                 areaTicket.innerHTML = contenidoHTML;
