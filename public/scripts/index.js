@@ -294,6 +294,93 @@ async function actualizarUIConSesion(username, isAdmin) {
     document.getElementById('logout-btn-mobile')?.addEventListener('click', cerrarSesion);
 }
 
+async function obtenerFondos() {
+    try {
+        const response = await fetch('/api/usuario/fondos');
+        
+        if (!response.ok) {
+            throw new Error('Error al obtener fondos');
+        }
+        
+        const data = await response.json();
+        console.log('Fondos del usuario:', data.fondos);
+        return data.fondos;
+    } catch (error) {
+        console.error('Error al obtener fondos:', error);
+        return 0;
+    }
+}
+
+// Función para abrir el modal de agregar fondos
+function AgregarFondos() {
+    document.getElementById('fondos-modal').classList.remove('hidden');
+}
+
+// Cerrar modal de fondos
+document.getElementById('cerrar-fondos')?.addEventListener('click', function() {
+    document.getElementById('fondos-modal').classList.add('hidden');
+    document.getElementById('fondosForm').reset();
+    document.getElementById('mensaje-fondos').classList.add('hidden');
+});
+
+// Cerrar modal al hacer clic fuera
+document.getElementById('fondos-modal')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        this.classList.add('hidden');
+        document.getElementById('fondosForm').reset();
+        document.getElementById('mensaje-fondos').classList.add('hidden');
+    }
+});
+
+// Manejo del formulario de agregar fondos
+document.getElementById('fondosForm')?.addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const cantidad = document.getElementById('cantidad-fondos').value;
+    const fondosButton = document.getElementById('fondosButton');
+    const mensajeDiv = document.getElementById('mensaje-fondos');
+    
+    fondosButton.disabled = true;
+    fondosButton.textContent = 'Procesando...';
+    fondosButton.classList.add('opacity-50', 'cursor-not-allowed');
+    mensajeDiv.classList.add('hidden');
+    
+    try {
+        const response = await fetch('/api/usuario/agregar-fondos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ cantidad: parseFloat(cantidad) })
+        });
+
+        const data = await response.json();
+        mensajeDiv.classList.remove('hidden');
+        mensajeDiv.textContent = data.mensaje || data.error || 'Ocurrió un error';
+        
+        if (response.ok) {
+            mensajeDiv.className = 'mb-4 p-3 rounded-lg bg-green-100 text-green-800 border border-green-300';
+            document.getElementById('fondosForm').reset();
+            
+            // Recargar la página después de 1.5 segundos para mostrar los fondos actualizados
+            setTimeout(function() {
+                location.reload();
+            }, 1500);
+        } else {
+            mensajeDiv.className = 'mb-4 p-3 rounded-lg bg-red-100 text-red-800 border border-red-300';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mensajeDiv.classList.remove('hidden');
+        mensajeDiv.className = 'mb-4 p-3 rounded-lg bg-red-100 text-red-800 border border-red-300';
+        mensajeDiv.textContent = 'Error al conectar con el servidor';
+    } finally {
+        fondosButton.disabled = false;
+        fondosButton.textContent = 'Agregar Fondos';
+        fondosButton.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+});
+
 // Función para cerrar sesión
 async function cerrarSesion() {
     if (!confirm('¿Estás seguro de cerrar sesión?')) {
@@ -754,6 +841,62 @@ document.getElementById('loginForm')?.addEventListener('submit', function(event)
         loginButton.classList.remove('opacity-50', 'cursor-not-allowed');
     });
 });
+
+// Función para obtener fondos del usuario
+async function obtenerFondos() {
+    try {
+        const response = await fetch('/api/usuario/fondos');
+        
+        if (!response.ok) {
+            console.error('Error al obtener fondos');
+            return 0;
+        }
+        
+        const data = await response.json();
+        return data.fondos || 0;
+    } catch (error) {
+        console.error('Error:', error);
+        return 0;
+    }
+}
+
+// Función para agregar fondos
+async function AgregarFondos() {
+    const cantidad = prompt('¿Cuánto deseas agregar a tus fondos? (MXN)');
+    
+    if (cantidad === null || cantidad.trim() === '') {
+        return;
+    }
+    
+    const cantidadNumerica = parseFloat(cantidad);
+    
+    if (isNaN(cantidadNumerica) || cantidadNumerica <= 0) {
+        alert('Por favor ingresa una cantidad válida mayor a 0');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/usuario/agregar-fondos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ cantidad: cantidadNumerica })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            alert(`¡Fondos agregados exitosamente! Nuevo saldo: $${data.nuevosFondos.toFixed(2)} MXN`);
+            window.location.reload();
+        } else {
+            alert('Error al agregar fondos: ' + (data.error || 'Error desconocido'));
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al conectar con el servidor');
+    }
+}
 
 window.agregarAlCarrito = agregarAlCarrito;
 window.eliminarDelCarrito = eliminarDelCarrito;
