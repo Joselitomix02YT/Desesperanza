@@ -236,7 +236,7 @@ function imprimirTicket(pedidoIndex) {
 
 
 // Actualizar UI cuando hay sesión activa
-function actualizarUIConSesion(username, isAdmin) {
+async function actualizarUIConSesion(username, isAdmin) {
     const sesionContainer = document.getElementById('sesion-container');
     const sesionContainerMobile = document.getElementById('sesion-container-mobile');
     const loginContainer = document.getElementById('login-container');
@@ -244,10 +244,10 @@ function actualizarUIConSesion(username, isAdmin) {
     // Reemplazar botón de login por botón de usuario y cerrar sesión (DESKTOP)
     sesionContainer.innerHTML = `
         <div class="flex items-center gap-4">
-            <span class="opacity-60">${username}</span>
-            ${isAdmin ? '<a href="/index2.html" class="px-4 py-2 bg-black text-white hover:opacity-80 transition text-sm">Admin</a>' : ''}
-            <button id="logout-btn" class="px-4 py-2 border border-gray-200 hover:bg-gray-50 transition text-sm">
-                Salir
+            <span class="text-stone-700 font-light">👤 ${username}</span>
+            ${isAdmin ? '<a href="/index2.html" class="px-4 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-700 transition-colors text-sm">Panel Admin</a>' : ''}
+            <button id="logout-btn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm">
+                Cerrar Sesión
             </button>
         </div>
     `;
@@ -256,25 +256,35 @@ function actualizarUIConSesion(username, isAdmin) {
     if (sesionContainerMobile) {
         sesionContainerMobile.innerHTML = `
             <div class="flex flex-col gap-2">
-                <span class="block opacity-60 py-2">${username}</span>
-                ${isAdmin ? '<a href="/index2.html" class="block px-4 py-2 bg-black text-white hover:opacity-80 transition text-sm text-center">Admin</a>' : ''}
-                <button id="logout-btn-mobile" class="w-full px-4 py-2 border border-gray-200 hover:bg-gray-50 transition text-sm">
-                    Salir
+                <span class="block text-stone-700 font-light py-2">👤 ${username}</span>
+                ${isAdmin ? '<a href="/index2.html" class="block px-4 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-700 transition-colors text-sm text-center">Panel Admin</a>' : ''}
+                <button id="logout-btn-mobile" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm">
+                    Cerrar Sesión
                 </button>
             </div>
         `;
     }
 
+    
     // Ocultar formulario de login
     if (loginContainer) {
+        // Obtener fondos de forma asíncrona
+        const fondos = await obtenerFondos();
+        
         loginContainer.innerHTML = `
             <div class="text-center">
-                <h3 class="text-xl mb-4">Bienvenido, ${username}</h3>
-                <p class="opacity-60 mb-6">Sesión activa</p>
-                <a href="#mis-pedidos" class="inline-block px-6 py-3 bg-black text-white hover:opacity-80 transition mb-3">
-                    Ver Mis Pedidos
+                <h3 class="text-2xl font-light mb-4">¡Bienvenido, ${username}!</h3>
+                <p class="text-stone-600 mb-4">Has iniciado sesión correctamente</p>
+                <a href="#mis-pedidos" class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors mb-3">
+                    📦 Ver Mis Pedidos
                 </a>
-                ${isAdmin ? '<a href="/index2.html" class="inline-block px-6 py-3 border border-gray-200 hover:bg-gray-50 transition ml-3">Panel Admin</a>' : ''}
+                <div class="my-4 border-t border-stone-300" style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                    <p class="text-lg font-light mb-2">Fondos disponibles: $${fondos.toFixed(2)} MXN</p>
+                    <button onclick="AgregarFondos()" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                        Agregar Fondos
+                    </button>
+                </div>
+                ${isAdmin ? '<a href="/index2.html" class="inline-block px-6 py-3 bg-stone-800 text-white rounded-lg hover:bg-stone-700 transition-colors ml-3">Ir al Panel de Administración</a>' : ''}
             </div>
         `;
     }
