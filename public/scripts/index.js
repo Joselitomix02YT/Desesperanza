@@ -143,7 +143,7 @@ async function cargarMisPedidos() {
                             title="Mostrar ticket">
                         MOSTRAR TICKET
                     </button>
-                    <button onclick="imprimirTicket(${index})" class="px-6 py-3 bg-black text-white hover:opacity-80 transition text-xs tracking-wider">
+                    <button id="btn-imprimir-${index}" onclick="imprimirTicket(${index})" class="hidden px-6 py-3 bg-black text-white hover:opacity-80 transition text-xs tracking-wider">
                         IMPRIMIR
                     </button>
                 </div>
@@ -224,6 +224,12 @@ async function cargarMisPedidos() {
 
                 areaTicket.innerHTML = contenidoHTML;
                 areaTicket.classList.remove('hidden');
+                
+                // Mostrar el botón de imprimir
+                const btnImprimir = document.getElementById(`btn-imprimir-${pedidoIndex}`);
+                if (btnImprimir) {
+                    btnImprimir.classList.remove('hidden');
+                }
             });
         });
         
