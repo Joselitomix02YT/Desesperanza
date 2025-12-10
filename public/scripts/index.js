@@ -243,11 +243,11 @@ async function actualizarUIConSesion(username, isAdmin) {
     
     // Reemplazar botón de login por botón de usuario y cerrar sesión (DESKTOP)
     sesionContainer.innerHTML = `
-        <div class="flex items-center gap-4">
-            <span class="text-stone-700 font-light">👤 ${username}</span>
-            ${isAdmin ? '<a href="/index2.html" class="px-4 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-700 transition-colors text-sm">Panel Admin</a>' : ''}
-            <button id="logout-btn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm">
-                Cerrar Sesión
+        <div class="flex items-center gap-6">
+            <span class="opacity-60 text-xs tracking-wider uppercase">${username}</span>
+            ${isAdmin ? '<a href="/index2.html" class="px-6 py-3 bg-black text-white hover:opacity-80 transition text-xs tracking-wider">ADMIN</a>' : ''}
+            <button id="logout-btn" class="px-6 py-3 border border-gray-200 hover:bg-gray-50 transition text-xs tracking-wider">
+                SALIR
             </button>
         </div>
     `;
@@ -255,11 +255,11 @@ async function actualizarUIConSesion(username, isAdmin) {
     // Actualizar menú MÓVIL
     if (sesionContainerMobile) {
         sesionContainerMobile.innerHTML = `
-            <div class="flex flex-col gap-2">
-                <span class="block text-stone-700 font-light py-2">👤 ${username}</span>
-                ${isAdmin ? '<a href="/index2.html" class="block px-4 py-2 bg-stone-800 text-white rounded-lg hover:bg-stone-700 transition-colors text-sm text-center">Panel Admin</a>' : ''}
-                <button id="logout-btn-mobile" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm">
-                    Cerrar Sesión
+            <div class="flex flex-col gap-3">
+                <span class="block opacity-60 text-xs tracking-wider uppercase py-2">${username}</span>
+                ${isAdmin ? '<a href="/index2.html" class="block px-6 py-3 bg-black text-white hover:opacity-80 transition text-xs tracking-wider text-center">ADMIN</a>' : ''}
+                <button id="logout-btn-mobile" class="w-full px-6 py-3 border border-gray-200 hover:bg-gray-50 transition text-xs tracking-wider">
+                    SALIR
                 </button>
             </div>
         `;
@@ -272,19 +272,23 @@ async function actualizarUIConSesion(username, isAdmin) {
         const fondos = await obtenerFondos();
         
         loginContainer.innerHTML = `
-            <div class="text-center">
-                <h3 class="text-2xl font-light mb-4">¡Bienvenido, ${username}!</h3>
-                <p class="text-stone-600 mb-4">Has iniciado sesión correctamente</p>
-                <a href="#mis-pedidos" class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors mb-3">
-                    📦 Ver Mis Pedidos
+            <div class="text-center max-w-2xl mx-auto">
+                <h3 class="text-4xl sm:text-5xl tracking-tighter mb-6">Bienvenido, ${username}</h3>
+                <p class="opacity-60 mb-12 text-lg">Tu sesión está activa</p>
+                
+                <a href="#mis-pedidos" class="inline-block px-8 py-4 bg-black text-white hover:opacity-80 transition text-xs tracking-wider mb-8">
+                    VER MIS PEDIDOS
                 </a>
-                <div class="my-4 border-t border-stone-300" style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                    <p class="text-lg font-light mb-2">Fondos disponibles: $${fondos.toFixed(2)} MXN</p>
-                    <button onclick="AgregarFondos()" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                        Agregar Fondos
+                
+                <div class="my-12 pt-12 border-t border-gray-100">
+                    <p class="text-xs uppercase tracking-[0.3em] opacity-30 mb-4">Saldo disponible</p>
+                    <p class="text-5xl sm:text-6xl tracking-tight mb-8">$${fondos.toFixed(2)}</p>
+                    <button onclick="AgregarFondos()" class="px-8 py-4 border border-gray-200 hover:bg-gray-50 transition text-xs tracking-wider">
+                        AGREGAR FONDOS
                     </button>
                 </div>
-                ${isAdmin ? '<a href="/index2.html" class="inline-block px-6 py-3 bg-stone-800 text-white rounded-lg hover:bg-stone-700 transition-colors ml-3">Ir al Panel de Administración</a>' : ''}
+                
+                ${isAdmin ? '<a href="/index2.html" class="inline-block px-8 py-4 bg-black text-white hover:opacity-80 transition text-xs tracking-wider mt-8">PANEL ADMIN</a>' : ''}
             </div>
         `;
     }
@@ -815,14 +819,14 @@ document.getElementById('loginForm')?.addEventListener('submit', function(event)
         mensajeDiv.textContent = result.data.mensaje;
         
         if (result.status === 200) {
-            mensajeDiv.className = 'mb-4 p-3 rounded-lg bg-green-100 text-green-800 border border-green-300';
+            mensajeDiv.className = 'mb-6 p-4 border border-gray-200 bg-gray-50 text-sm tracking-wide';
             
             setTimeout(function() {
                 window.location.href = result.data.redirect;
             }, 500);
             
         } else {
-            mensajeDiv.className = 'mb-4 p-3 rounded-lg bg-red-100 text-red-800 border border-red-300';
+            mensajeDiv.className = 'mb-6 p-4 border border-black bg-white text-sm tracking-wide';
             
             loginButton.disabled = false;
             loginButton.textContent = 'Entrar';
@@ -833,7 +837,7 @@ document.getElementById('loginForm')?.addEventListener('submit', function(event)
         console.error('Error:', error);
         
         mensajeDiv.classList.remove('hidden');
-        mensajeDiv.className = 'mb-4 p-3 rounded-lg bg-red-100 text-red-800 border border-red-300';
+        mensajeDiv.className = 'mb-6 p-4 border border-black bg-white text-sm tracking-wide';
         mensajeDiv.textContent = 'Error al conectar con el servidor. Intenta nuevamente.';
         
         loginButton.disabled = false;
