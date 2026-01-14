@@ -29,7 +29,7 @@ console.log('   PASSWORD exists:', !!(process.env.MYSQL_PASSWORD || process.env.
 
 // Obtener puerto y convertir a número
 const portFromEnv = process.env.MYSQL_PORT || process.env.MYSQLPORT;
-const mysqlPort = portFromEnv ? parseInt(portFromEnv, 10) : 34054;
+const mysqlPort = portFromEnv ? parseInt(portFromEnv, 10) : 27451;
 
 console.log('🔧 Puerto detectado:', portFromEnv, '→ convertido a:', mysqlPort);
 
@@ -64,7 +64,7 @@ pool.getConnection()
   .catch(err => {
     console.error('❌ Error al conectar a MySQL:', err.message)
     console.error('   Host intentado:', process.env.MYSQL_HOST || process.env.MYSQLHOST)
-    console.error('   Port intentado:', process.env.MYSQL_PORT || process.env.MYSQLPORT || 34054)
+    console.error('   Port intentado:', process.env.MYSQL_PORT || process.env.MYSQLPORT || 27451)
   })
 
 const sessionStore = new MySQLStore({}, pool)
@@ -654,7 +654,7 @@ app.post('/api/usuario/agregar-fondos', async (req, res) => {
   }
   });
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 27451
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`)
 })
